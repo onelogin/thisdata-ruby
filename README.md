@@ -34,9 +34,3 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/revertio/thisdata-ruby.
-
-## License
-
-(The MIT License)
-
-Copyright (c) 2016 ThisData Ltd. hello@thisdata.com
