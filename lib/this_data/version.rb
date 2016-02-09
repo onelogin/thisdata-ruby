@@ -1,3 +1,3 @@
-module Thisdata
+module ThisData
   VERSION = "0.1.0"
 end

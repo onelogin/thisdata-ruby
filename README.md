@@ -7,7 +7,7 @@ This gem allows you to use the ThisData Login Intelligence API.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'thisdata'
+gem 'thisdata-ruby'
 ```
 
 And then execute:
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install thisdata
+    $ gem install thisdata-ruby
 
 ## Usage
 

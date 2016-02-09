@@ -1,13 +1,13 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'thisdata/version'
+require 'this_data/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "thisdata"
-  spec.version       = Thisdata::VERSION
-  spec.authors       = ["Nick Malcolm"]
-  spec.email         = ["nick@revert.io"]
+  spec.name          = "thisdata-ruby"
+  spec.version       = ThisData::VERSION
+  spec.authors       = ["ThisData Ltd", "Nick Malcolm"]
+  spec.email         = ["support@thisdata.com", "nick@thisdata.com"]
 
   spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
   spec.description   = %q{TODO: Write a longer description or delete this line.}
@@ -26,7 +26,14 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_runtime_dependency "httparty", "~> 0.13"
+  spec.add_runtime_dependency "json"
+
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "minitest"
+  spec.add_development_dependency "minitest", "~> 5.8.4"
+  spec.add_development_dependency "fakeweb", "~> 1.3"
+  spec.add_development_dependency "mocha", "~> 1.1.0"
+
+
 end
