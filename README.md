@@ -20,7 +20,23 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Run:
+
+    rails g this_data:install YOUR_API_KEY_HERE
+
+You can find your API key by going to [ThisData](https://thisdata.com) >
+  Integrations > Login Intelligence API.
+
+You can then test your ThisData integration by running:
+
+    rake this_data:test
+
+You should see log in event appear in your ThisData dashboard.
+
+The generator will create a file in `config/initializers` called "this_data.rb".
+If you need to do any further configuration or customization of ThisData,
+that's the place to do it!
+
 
 https://thisdata.com
 http://help.thisdata.com/docs/apiv1events
