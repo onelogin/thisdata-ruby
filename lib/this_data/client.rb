@@ -21,6 +21,19 @@ module ThisData
       ThisData.configuration.api_key || print_api_key_warning
     end
 
+    # Tracks a user initiated event which has occurred within your app, e.g.
+    # a user logging in.
+    # See http://help.thisdata.com/v1.0/docs/apiv1events for more information.
+    # - event       (Required: Hash) the event, containing the following keys:
+    #  - ip         (Required: String)    the IP address of the request
+    #  - user_agent (Optional: String) the user agent from the request
+    #  - user       (Required: Hash)
+    #   - id        (Required: String)  a unique identifier for this User
+    #   - email     (Optional*: String) the user's email address.
+    #   - mobile    (Optional*: String) a mobile phone number in E.164 format
+    #                 *email and/or mobile MUST be passed if you want ThisData
+    #                 to send 'Was This You?' notifications via email and/or SMS
+    #   - name      (Optional: String)  the user's name, used in notifications
     def track(event)
       post_event(event)
     end
