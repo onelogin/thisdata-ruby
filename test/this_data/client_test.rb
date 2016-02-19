@@ -24,6 +24,7 @@ class ThisData::ClientTest < ThisData::UnitTest
         id: "the-users-uuid"
       }
     }
+    # POST requests are faked to return 200s in test_helper.rb
     response = ThisData.track(event)
     assert response.success?
   end
