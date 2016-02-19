@@ -25,13 +25,13 @@ class ThisData::ClientTest < ThisData::UnitTest
       }
     }
     # POST requests are faked to return 200s in test_helper.rb
-    response = ThisData.track(event)
+    response = @client.track(event)
     assert response.success?
   end
 
   def test_errors_are_caught_asd
     ThisData::Client.expects(:post).raises("An error!")
-    refute ThisData.track({})
+    refute @client.track({})
   end
 
 end

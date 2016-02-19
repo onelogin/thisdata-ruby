@@ -25,7 +25,9 @@ module ThisData
     # a user logging in.
     # See http://help.thisdata.com/v1.0/docs/apiv1events for more information.
     # - event       (Required: Hash) the event, containing the following keys:
-    #  - ip         (Required: String)    the IP address of the request
+    #  - verb       (Required: String) 'what' the user did, e.g. 'log-in'.
+    #                 See ThisData::Verbs for predefined options.
+    #  - ip         (Required: String) the IP address of the request
     #  - user_agent (Optional: String) the user agent from the request
     #  - user       (Required: Hash)
     #   - id        (Required: String)  a unique identifier for this User
