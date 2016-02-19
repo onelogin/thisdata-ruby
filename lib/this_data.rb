@@ -34,6 +34,9 @@ module ThisData
     def log(message)
       configuration.logger.info(message) if configuration.logger
     end
+    def warn(message)
+      configuration.logger.warn(message) if configuration.logger
+    end
 
   end
 end

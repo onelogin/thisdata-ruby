@@ -34,6 +34,9 @@ module ThisData
       def post_event(payload_hash)
         path_with_key = "/events?api_key=#{ThisData.configuration.api_key}"
         self.class.post(path_with_key, headers: @headers, body: JSON.generate(payload_hash))
+      rescue => e
+        ThisData.warn("ThisData failed to post event!")
+        ThisData.warn(e)
       end
 
       def print_api_key_warning
