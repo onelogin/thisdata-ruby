@@ -21,13 +21,32 @@ module ThisData
     # Log the events sent
     config_option :logger
 
+    # TrackRequest config options
+    # We will attempt to call this method on a Controller to get the user record
+    # Default: :current_user
+    config_option :user_method
+    # This method should return a unique ID for a user. Default: :id
+    config_option :user_id_method
+    # This method should return the user's name. Default: :name
+    config_option :user_name_method
+    # This method should return the user's email. Default: :email
+    config_option :user_email_method
+    # This method should return the user's mobile phone number. Default: :mobile
+    config_option :user_mobile_method
+
     attr_reader :defaults
 
     def initialize
       @config_values = {}
 
       # set default attribute values
-      @defaults = OpenStruct.new({})
+      @defaults = OpenStruct.new({
+        user_method:        :current_user,
+        user_id_method:     :id,
+        user_name_method:   :name,
+        user_email_method:  :email,
+        user_mobile_method: :mobile
+      })
     end
 
     def [](key)

@@ -9,6 +9,12 @@ module ThisData
         <<-EOS
 ThisData.setup do |config|
   config.api_key = "#{api_key}"
+
+  # config.user_method =        :current_user
+  # config.user_id_method =     :id
+  # config.user_name_method =   :name
+  # config.user_email_method =  :email
+  # config.user_mobile_method = :mobile
 end
 EOS
       end
