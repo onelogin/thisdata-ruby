@@ -6,6 +6,7 @@ require "this_data/version"
 require "this_data/verbs"
 require "this_data/client"
 require "this_data/configuration"
+require "this_data/track_request"
 
 module ThisData
 
