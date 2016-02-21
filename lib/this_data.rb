@@ -29,8 +29,13 @@ module ThisData
 
     # Creates a Client and tracks an event.
     def track(event)
-      log("[ThisData] Tracking Event...")
+      log("Tracking Event...")
       Client.new.track(event)
+    rescue => e
+      ThisData.error("Failed to track event:")
+      ThisData.error(e)
+      ThisData.error(e.backtrace[0..5].join('\n'), prefix: false)
+      false
     end
 
     # A helper method to track a log-in event. Validates that the minimum
@@ -46,11 +51,18 @@ module ThisData
       })
     end
 
-    def log(message)
-      configuration.logger.info(message) if configuration.logger
+    def log(message, level: "info", prefix: true)
+      if prefix
+        message = "[ThisData] " + message.to_s
+      end
+      configuration.logger.send(level, message) if configuration.logger
     end
-    def warn(message)
-      configuration.logger.warn(message) if configuration.logger
+    def warn(message, prefix: true)
+      log(message)
+    end
+    def error(message, prefix: true)
+      log()
+      log('error', message)
     end
 
   end

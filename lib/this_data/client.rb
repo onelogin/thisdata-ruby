@@ -4,7 +4,7 @@ module ThisData
   class Client
 
     USER_AGENT = "ThisData Ruby v#{ThisData::VERSION}"
-    NO_API_KEY_MESSAGE  = "[ThisData] Oops: you've got no API Key configured, so we can't send events. Specify your ThisData API key using ThisData#setup (find yours at https://thisdata.com)"
+    NO_API_KEY_MESSAGE  = "Oops: you've got no ThisData API Key configured, so we can't send events. Specify your ThisData API key using ThisData#setup (find yours at https://thisdata.com)"
 
     include HTTParty
 
@@ -49,9 +49,6 @@ module ThisData
       def post_event(payload_hash)
         path_with_key = "/events?api_key=#{ThisData.configuration.api_key}"
         self.class.post(path_with_key, headers: @headers, body: JSON.generate(payload_hash))
-      rescue => e
-        ThisData.warn("ThisData failed to post event!")
-        ThisData.warn(e)
       end
 
       def print_api_key_warning
