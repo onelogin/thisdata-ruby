@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'this_data/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "this_data"
+  spec.name          = "thisdata"
   spec.version       = ThisData::VERSION
   spec.authors       = ["ThisData Ltd", "Nick Malcolm"]
   spec.email         = ["support@thisdata.com", "nick@thisdata.com"]
