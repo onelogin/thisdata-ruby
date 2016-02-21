@@ -27,19 +27,47 @@ Run:
 You can find your API key by going to [ThisData](https://thisdata.com) >
   Integrations > Login Intelligence API.
 
-You can then test your ThisData integration by running:
-
-    rake this_data:test
-
-You should see log in event appear in your ThisData dashboard.
-
 The generator will create a file in `config/initializers` called "this_data.rb".
 If you need to do any further configuration or customization of ThisData,
 that's the place to do it!
 
+## Ruby
 
-https://thisdata.com
+You can track any event by calling `ThisData.track` and passing a Hash which
+contains an event. See examples and required fields on our API documentation:
 http://help.thisdata.com/docs/apiv1events
+
+## Rails
+
+The ThisData::TrackRequest module can be included in a ActionController, giving
+you a handy way to track requests.
+
+e.g. in `app/controllers/application_controller.rb`
+```
+class ApplicationController < ActionController::Base
+  include ThisData::TrackRequest
+
+  ...
+end
+```
+
+and in your sessions controller:
+```
+class SessionsController < ApplicationController
+
+  def finalize
+    if login_was_valid?
+      # do login stuff
+      thisdata_track
+    else
+      thisdata_track('login-denied')
+    end
+  end
+
+end
+```
+
+
 
 ## Development
 
