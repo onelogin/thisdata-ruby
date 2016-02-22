@@ -20,24 +20,36 @@ Or install it yourself as:
 
 ## Usage
 
+### Ruby
+
+Configure ThisData as follows:
+
+```
+ThisData.setup do |config|
+  config.api_key = "API_KEY_HERE"
+end
+```
+
+You can then track any event by calling `ThisData.track` and passing a Hash which
+contains an event. See examples and required fields on our API documentation:
+http://help.thisdata.com/docs/apiv1events
+
+**Important!** You should not commit your API keys to source control. Where
+possible, use environment variables / a non-committed secrets file / something
+similar.
+
+### Rails
+
+Find your API key by going to [ThisData](https://thisdata.com) >
+  Integrations > Login Intelligence API.
+
 Run:
 
     rails g this_data:install YOUR_API_KEY_HERE
 
-You can find your API key by going to [ThisData](https://thisdata.com) >
-  Integrations > Login Intelligence API.
-
 The generator will create a file in `config/initializers` called "this_data.rb".
 If you need to do any further configuration or customization of ThisData,
 that's the place to do it!
-
-## Ruby
-
-You can track any event by calling `ThisData.track` and passing a Hash which
-contains an event. See examples and required fields on our API documentation:
-http://help.thisdata.com/docs/apiv1events
-
-## Rails
 
 The ThisData::TrackRequest module can be included in a ActionController, giving
 you a handy way to track requests.
@@ -67,7 +79,24 @@ class SessionsController < ApplicationController
 end
 ```
 
+### Stuck?
 
+By default there is no logger configured, and requests are performed
+asynchronously. The following config settings can be helpful in debugging issues:
+
+`config/initializers/this_data.rb`
+```
+ThisData.setup do |config|
+  # ...
+
+  config.logger = Rails.logger # or Logger.new($stdout)
+  config.asyc   = false
+end
+```
+
+Our documentation can be read at http://help.thisdata.com.
+
+Reach out to developers@thisdata.com if you need any help.
 
 ## Development
 
@@ -77,4 +106,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/revertio/thisdata-ruby.
+Bug reports and pull requests are welcome on GitHub at https://github.com/thisdata/thisdata-ruby.
