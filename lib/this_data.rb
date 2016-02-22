@@ -58,11 +58,10 @@ module ThisData
       configuration.logger.send(level, message) if configuration.logger
     end
     def warn(message, prefix: true)
-      log(message)
+      log(message, level: 'warn')
     end
     def error(message, prefix: true)
-      log()
-      log('error', message)
+      log(message, level: 'warn')
     end
 
   end
