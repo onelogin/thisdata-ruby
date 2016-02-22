@@ -22,6 +22,9 @@ ThisData.setup do |config|
 
   # Define a Logger instance if you want to debug / track errors
   # config.logger = Rails.logger unless Rails.env.production?
+
+  # Set this to false if you want ThisData.track to perform in the same thread
+  # config.asyc =               false
 end
 EOS
       end

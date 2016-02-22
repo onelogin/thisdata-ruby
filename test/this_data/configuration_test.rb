@@ -8,20 +8,24 @@ class ThisData::ConfigurationTest < ThisData::UnitTest
     end
   end
 
-  def test_setting_api_key
+  test "setting api key" do
     assert_equal "abc-123", ThisData.configuration.api_key
   end
 
-  def test_hash_style_access
+  test "hash style access" do
     assert_equal "abc-123", ThisData.configuration[:api_key]
   end
 
-  def test_default_user_methods
+  test "default user methods" do
     assert_equal :current_user, ThisData.configuration.user_method
     assert_equal :id,     ThisData.configuration.user_id_method
     assert_equal :name,   ThisData.configuration.user_name_method
     assert_equal :email,  ThisData.configuration.user_email_method
     assert_equal :mobile, ThisData.configuration.user_mobile_method
+  end
+
+  test "asynchronous by default" do
+    assert ThisData.configuration.async
   end
 
 end

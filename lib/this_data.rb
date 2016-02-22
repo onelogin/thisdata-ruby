@@ -27,18 +27,17 @@ module ThisData
       configuration.defaults
     end
 
-    # Creates a Client and tracks an event.
+    # Tracks an event. If `ThisData.configuration.async` is true, this action
+    # will be performed in a new Thread.
     # Event must be a Hash
+    # When performed asynchronously, true is always returned.
+    # Otherwise an HTTPRequest is returned.
     def track(event)
-      Client.new.track(event)
-      log("Tracked event!")
-    rescue => e
-      ThisData.error("Failed to track event:")
-      ThisData.error(e)
-      e.backtrace.each do |line|
-        ThisData.error(line, prefix: false)
+      if ThisData.configuration.async
+        track_async(event)
+      else
+        track_with_response(event)
       end
-      false
     end
 
     # A helper method to track a log-in event. Validates that the minimum
@@ -66,6 +65,36 @@ module ThisData
     def error(message, prefix: true)
       log(message, level: 'error', prefix: prefix)
     end
+
+    private
+
+      # Creates a Client and tracks an event.
+      # Event must be a Hash.
+      # Rescues and logs all exceptions.
+      # Returns an HTTPResponse
+      def track_with_response(event)
+        response = Client.new.track(event)
+        log("Tracked event!")
+        response
+      rescue => e
+        ThisData.error("Failed to track event:")
+        ThisData.error(e)
+        e.backtrace.each do |line|
+          ThisData.error(line, prefix: false)
+        end
+        false
+      end
+
+      # Performs the track function within a new Thread, so it is non blocking.
+      # Returns the Thread created
+      def track_async(event)
+        Thread.new do
+          track_with_response(event)
+        end
+      rescue => e
+        ThisData.error("Cannot create Thread: #{e.inspect}")
+        false
+      end
 
   end
 end
