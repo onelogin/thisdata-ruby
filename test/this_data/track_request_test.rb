@@ -52,7 +52,6 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     assert_equal "67890", @controller.send(:user_details)[:id]
   end
 
-
   test "thisdata_track creates and posts an event containing user and request details" do
     request = stub(remote_ip: "1.2.3.4", user_agent: "Chrome User Agent")
     @controller.request = request
@@ -74,5 +73,10 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
 
     ThisData.expects(:track).with(expected).once
     @controller.thisdata_track
+  end
+
+  test "thisdata_track will silently handle errors" do
+    ThisData.stubs(:track).raises(ArgumentError)
+    assert_equal false, @controller.thisdata_track
   end
 end

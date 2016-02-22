@@ -23,7 +23,7 @@ module ThisData
     rescue => e
       ThisData.error "Could not track event:"
       ThisData.error e
-      ThisData.error e.backtrace.limit(5).join("\n")
+      ThisData.error e.backtrace[0..5].join("\n")
       false
     end
 
