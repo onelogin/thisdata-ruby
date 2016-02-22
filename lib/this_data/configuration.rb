@@ -18,6 +18,11 @@ module ThisData
     #   > Login Intelligence API
     config_option :api_key
 
+    # When true, requests will be performed asynchronously. Setting this to
+    # false can help with debugging.
+    # Default: true
+    config_option :async
+
     # Log the events sent
     config_option :logger
 
@@ -41,6 +46,7 @@ module ThisData
 
       # set default attribute values
       @defaults = OpenStruct.new({
+        async:              true,
         user_method:        :current_user,
         user_id_method:     :id,
         user_name_method:   :name,
