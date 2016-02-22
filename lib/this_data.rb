@@ -28,13 +28,16 @@ module ThisData
     end
 
     # Creates a Client and tracks an event.
+    # Event must be a Hash
     def track(event)
-      log("Tracking Event...")
       Client.new.track(event)
+      log("Tracked event!")
     rescue => e
       ThisData.error("Failed to track event:")
       ThisData.error(e)
-      ThisData.error(e.backtrace[0..5].join('\n'), prefix: false)
+      e.backtrace.each do |line|
+        ThisData.error(line, prefix: false)
+      end
       false
     end
 
@@ -51,17 +54,17 @@ module ThisData
       })
     end
 
-    def log(message, level: "info", prefix: true)
+    def log(message, level: 'info', prefix: true)
       if prefix
         message = "[ThisData] " + message.to_s
       end
       configuration.logger.send(level, message) if configuration.logger
     end
     def warn(message, prefix: true)
-      log(message, level: 'warn')
+      log(message, level: 'warn', prefix: prefix)
     end
     def error(message, prefix: true)
-      log(message, level: 'warn')
+      log(message, level: 'error', prefix: prefix)
     end
 
   end
