@@ -24,7 +24,7 @@ ThisData.setup do |config|
   # config.logger = Rails.logger unless Rails.env.production?
 
   # Set this to false if you want ThisData.track to perform in the same thread
-  # config.asyc =               false
+  # config.async =               false
 end
 EOS
       end

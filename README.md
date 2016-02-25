@@ -90,7 +90,7 @@ ThisData.setup do |config|
   # ...
 
   config.logger = Rails.logger # or Logger.new($stdout)
-  config.asyc   = false
+  config.async  = false
 end
 ```
 

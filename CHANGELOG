@@ -1,3 +1,7 @@
+# 0.1.2
+
+Fix a typo in the configuration generator (`asyc` instead of `async`)
+
 # 0.1.1
 
 Makes Track requests asynchronous by default.
