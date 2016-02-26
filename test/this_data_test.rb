@@ -7,6 +7,7 @@ class ThisDataTest < ThisData::UnitTest
     thread = stub()
     ThisData.expects(:track_async).with(event).returns(thread)
 
+    ThisData.configuration.async = true
     assert_equal thread, ThisData.track(event)
   end
 

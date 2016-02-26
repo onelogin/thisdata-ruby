@@ -11,12 +11,20 @@ module ThisData
 
     # Will pull request and user details from the controller, and send an event
     # to ThisData.
-    def thisdata_track(verb: ThisData::Verbs::LOG_IN)
+    # Arguments:
+    #   verb: (String, Required). Defaults to ThisData::Verbs::LOG_IN.
+    #   user: (Object, Optional). If you want to override the user record
+    #     that we would usually fetch, you can pass it here.
+    def thisdata_track(verb: ThisData::Verbs::LOG_IN, user: nil)
+      if user.nil?
+        user = send(ThisData.configuration.user_method)
+      end
+
       event = {
         verb:       verb,
         ip:         request.remote_ip,
         user_agent: request.user_agent,
-        user:       user_details
+        user:       user_details(user)
       }
 
       ThisData.track(event)
@@ -29,12 +37,9 @@ module ThisData
 
     private
 
-      # Will fetch a user and return a Hash of details for the User returned
-      # by `ThisData.configuration.user_method`.
-      # Will raise a NoMethodError if controller does not return a user,
-      #  or we can't get a user id.
-      def user_details
-        user = send(ThisData.configuration.user_method)
+      # Will return a Hash of details for a user.
+      # Will raise a NoMethodError if user does not respond to `user_id_method`.
+      def user_details(user)
         {
           id:     user.send(ThisData.configuration.user_id_method),
           name:   value_if_configured(user, "user_name_method"),
