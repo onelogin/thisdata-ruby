@@ -74,7 +74,11 @@ module ThisData
       # Returns an HTTPResponse
       def track_with_response(event)
         response = Client.new.track(event)
-        log("Tracked event!")
+        if response.try(:success?)
+          log("Tracked event! #{response.response.inspect}")
+        else
+          warn("Track failure! #{response.response.inspect} #{response.body}")
+        end
         response
       rescue => e
         ThisData.error("Failed to track event:")

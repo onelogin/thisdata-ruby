@@ -29,9 +29,4 @@ class ThisData::ClientTest < ThisData::UnitTest
     assert response.success?
   end
 
-  def test_errors_are_caught_asd
-    ThisData::Client.expects(:post).raises("An error!")
-    refute @client.track({})
-  end
-
 end
