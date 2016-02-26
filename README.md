@@ -55,29 +55,42 @@ The ThisData::TrackRequest module can be included in a ActionController, giving
 you a handy way to track requests.
 
 e.g. in `app/controllers/application_controller.rb`
-```
-class ApplicationController < ActionController::Base
-  include ThisData::TrackRequest
 
-  ...
-end
-```
+    class ApplicationController < ActionController::Base
+      include ThisData::TrackRequest
+
+      ...
+    end
+
 
 and in your sessions controller:
-```
-class SessionsController < ApplicationController
 
-  def finalize
-    if login_was_valid?
-      # do login stuff
-      thisdata_track
-    else
-      thisdata_track('login-denied')
+    class SessionsController
+      def create
+        if User.authenticate(params[:email], params[:password])
+          # Do the things one usually does for a successful auth
+
+          # And also track the login
+          thisdata_track
+        else
+          # Their credentials are wrong. Are they trying to access
+          # a valid account?
+          if attempted_user = User.find_by(email: params[:email])
+            thisdata_track(
+              verb: ThisData::Verbs::LOG_IN_DENIED,
+              user: attempted_user
+            )
+          else
+            # email and password were both incorrect
+          end
+        end
+      end
     end
-  end
 
-end
-```
+Note: as with many sensitive operations, taking different actions when an
+account exists vs. when an account doesn't exist can lead to a information
+disclosure through timing attacks.
+
 
 ### Stuck?
 
@@ -94,9 +107,10 @@ ThisData.setup do |config|
 end
 ```
 
-Our documentation can be read at http://help.thisdata.com.
+Our documentation can be read at http://help.thisdata.com. Our API will return
+error messages you can inspect if the payload is missing required attributes.
 
-Reach out to developers@thisdata.com if you need any help.
+Reach out to developers@thisdata.com if you need any help, or open an issue!
 
 ## Development
 
