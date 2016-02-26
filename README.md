@@ -20,72 +20,109 @@ Or install it yourself as:
 
 ## Usage
 
-### Ruby
+Our API endpoint documentation, tutorials, and sample code can all be found at
+http://help.thisdata.com
+
+### Plain Old Ruby
+
+#### Configuration
 
 Configure ThisData as follows:
 
-```
+```ruby
 ThisData.setup do |config|
-  config.api_key = "API_KEY_HERE"
+  config.api_key = "API_KEY_HERE" # Don't commit your key to source control!
+  config.logger  = Logger.new($stdout)
+  config.async   = false
 end
 ```
 
-You can then track any event by calling `ThisData.track` and passing a Hash which
-contains an event. See examples and required fields on our API documentation:
-http://help.thisdata.com/docs/apiv1events
+See `this_data/configuration.rb` for more options, and some suggested
+Ruby on Rails options in `this_data/generators/install_generator.rb`.
 
-**Important!** You should not commit your API keys to source control. Where
-possible, use environment variables / a non-committed secrets file / something
-similar.
+For example, in production you will probably want asynchronous and non-logging
+behaviour.
+
+#### Tracking an Event
+
+You can then track any event by calling `ThisData.track` and passing a Hash which
+contains an event. In the following example, we're tracking a user logging in
+to our app:
+
+```ruby
+ThisData.track(
+  {
+    ip: request.remote_ip,
+    user_agent: request.user_agent,
+    verb: ThisData::Verbs::LOG_IN,
+    user: {
+      id: user.id.to_s,
+      name: user.name,
+      email: user.email
+      mobile: user.mobile
+    }
+  }
+)
+```
+
 
 ### Rails
+
+#### Set Up
+
+We have a generator which will set some nice configuration options for Ruby on
+Rails users.
 
 Find your API key by going to [ThisData](https://thisdata.com) >
   Integrations > Login Intelligence API.
 
 Run:
 
-    rails g this_data:install YOUR_API_KEY_HERE
+```ruby
+rails g this_data:install YOUR_API_KEY_HERE
+```
 
 The generator will create a file in `config/initializers` called "this_data.rb".
 If you need to do any further configuration or customization of ThisData,
 that's the place to do it!
 
-The ThisData::TrackRequest module can be included in a ActionController, giving
-you a handy way to track requests.
+#### Tracking
 
-e.g. in `app/controllers/application_controller.rb`
+**The recommended way to track events is as above - explicitly calling
+`ThisData.track`.**
 
-    class ApplicationController < ActionController::Base
-      include ThisData::TrackRequest
+However, we do provide a `ThisData::TrackRequest` module which, when included in
+an ActionController, gives you a simple way to track requests.
 
-      ...
-    end
+You include the module, then call `thisdata_track`. Easy!
 
+e.g. in your sessions controller:
 
-and in your sessions controller:
+```ruby
+class SessionsController < ApplicationController
+  include ThisData::TrackRequest
 
-    class SessionsController
-      def create
-        if User.authenticate(params[:email], params[:password])
-          # Do the things one usually does for a successful auth
+  def create
+    if User.authenticate(params[:email], params[:password])
+      # Do the things one usually does for a successful auth
 
-          # And also track the login
-          thisdata_track
-        else
-          # Their credentials are wrong. Are they trying to access
-          # a valid account?
-          if attempted_user = User.find_by(email: params[:email])
-            thisdata_track(
-              verb: ThisData::Verbs::LOG_IN_DENIED,
-              user: attempted_user
-            )
-          else
-            # email and password were both incorrect
-          end
-        end
+      # And also track the login
+      thisdata_track
+    else
+      # Their credentials are wrong. Are they trying to access
+      # a valid account?
+      if attempted_user = User.find_by(email: params[:email])
+        thisdata_track(
+          verb: ThisData::Verbs::LOG_IN_DENIED,
+          user: attempted_user
+        )
+      else
+        # email and password were both incorrect
       end
     end
+  end
+end
+```
 
 Note: as with many sensitive operations, taking different actions when an
 account exists vs. when an account doesn't exist can lead to a information
@@ -94,18 +131,7 @@ disclosure through timing attacks.
 
 ### Stuck?
 
-By default there is no logger configured, and requests are performed
-asynchronously. The following config settings can be helpful in debugging issues:
-
-`config/initializers/this_data.rb`
-```
-ThisData.setup do |config|
-  # ...
-
-  config.logger = Rails.logger # or Logger.new($stdout)
-  config.async  = false
-end
-```
+The API endpoint validates the events you send. If it's returning
 
 Our documentation can be read at http://help.thisdata.com. Our API will return
 error messages you can inspect if the payload is missing required attributes.
