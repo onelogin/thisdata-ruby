@@ -92,6 +92,11 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
   end
 
   test "thisdata_track creates and posts an event containing user and request details" do
+    ThisData.expects(:track).with(has_key(verb: 'foo')).once
+    @controller.thisdata_track(verb: 'foo')
+  end
+
+  test "thisdata_track creates and posts an event containing user and request details" do
     request = stub(remote_ip: "1.2.3.4", user_agent: "Chrome User Agent")
     @controller.request = request
 
