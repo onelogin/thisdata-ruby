@@ -15,6 +15,13 @@ module ThisData
     #   verb: (String, Required). Defaults to ThisData::Verbs::LOG_IN.
     #   user: (Object, Optional). If you want to override the user record
     #     that we would usually fetch, you can pass it here.
+    #     Unless a user is specified here we'll attempt to get the user record
+    #       as specified in the ThisData gem configuration. This defaults to
+    #       `current_user`.
+    #     The object must respond to at least
+    #       `ThisData.configuration.user_id_method`, which defaults to `id`.
+    #
+    # Returns the result of ThisData.track (an HTTPartyResponse)
     def thisdata_track(verb: ThisData::Verbs::LOG_IN, user: nil)
       if user.nil?
         user = send(ThisData.configuration.user_method)
@@ -37,8 +44,10 @@ module ThisData
 
     private
 
-      # Will return a Hash of details for a user.
-      # Will raise a NoMethodError if user does not respond to `user_id_method`.
+      # Will return a Hash of details for a user using the methods specified
+      # in the gem configuration.
+      # Will raise a NoMethodError if user does not respond the
+      # specified `user_id_method`. A user id is required for all events.
       def user_details(user)
         {
           id:     user.send(ThisData.configuration.user_id_method),
