@@ -131,7 +131,8 @@ disclosure through timing attacks.
 
 ### Stuck?
 
-The API endpoint validates the events you send. If it's returning
+The API endpoint validates the events you send, and will return errors in the
+body of the response. Enabling logging will help you debug this.
 
 Our documentation can be read at http://help.thisdata.com. Our API will return
 error messages you can inspect if the payload is missing required attributes.
