@@ -31,7 +31,7 @@ Configure ThisData as follows:
 
 ```ruby
 ThisData.setup do |config|
-  config.api_key = "API_KEY_HERE" # Don't commit your key to source control!
+  config.api_key = 'API_KEY_HERE' # Don't commit your key to source control!
   config.logger  = Logger.new($stdout)
   config.async   = false
 end
@@ -58,7 +58,7 @@ ThisData.track(
     user: {
       id: user.id.to_s,
       name: user.name,
-      email: user.email
+      email: user.email,
       mobile: user.mobile
     }
   }
