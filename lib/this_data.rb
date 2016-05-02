@@ -74,7 +74,8 @@ module ThisData
       # Returns an HTTPResponse
       def track_with_response(event)
         response = Client.new.track(event)
-        if response.try(:success?)
+        success = response.success? rescue nil # HTTParty doesn't like `.try`
+        if success
           log("Tracked event! #{response.response.inspect}")
         else
           warn("Track failure! #{response.response.inspect} #{response.body}")
