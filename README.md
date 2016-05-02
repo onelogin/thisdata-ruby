@@ -32,7 +32,7 @@ more options. For example, in production you will probably want asynchronous and
 non-logging behaviour.
 
 If you're using Rails, you can generate this config file by following our
-[#set-up](Set Up) steps further down.
+[Set Up](#set-up) steps further down.
 
 
 ```ruby
