@@ -1,3 +1,13 @@
+# 0.1.4
+
+  - ThisData wasn't being required properly: https://github.com/thisdata/thisdata-ruby/issues/8
+  - The response / failure of a request to our API wasn't being correctly logged
+    https://github.com/thisdata/thisdata-ruby/issues/9
+  - There are some new verbs with special semantic meaning which we've added
+    https://github.com/thisdata/thisdata-ruby/issues/12
+  - Tweaks to the ruby sample code, by @timhaines
+    https://github.com/thisdata/thisdata-ruby/pull/7
+
 # 0.1.3
 
 In the `ThisData::TrackRequest` module, make tracking a bit easier especially
