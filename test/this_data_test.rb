@@ -24,7 +24,8 @@ class ThisDataTest < ThisData::UnitTest
     client = stub()
     ThisData::Client.expects(:new).returns(client)
     event = stub()
-    client.expects(:track).with(event)
+    response = stub("success?" => true, response: stub())
+    client.expects(:track).with(event).returns(response)
     ThisData.send(:track_with_response, event)
   end
 
@@ -44,6 +45,28 @@ class ThisDataTest < ThisData::UnitTest
     }
     ThisData.expects(:track).with(expected)
     ThisData.track_login(
+      ip: "1.2.3.4",
+      user: {id: "the-users-uuid"}
+    )
+  end
+
+  test "successful track is logged" do
+    path = "https://api.thisdata.com/v1/events?api_key=#{ThisData.configuration.api_key}"
+    FakeWeb.register_uri(:post, path, body: "foo", status: 201)
+
+    ThisData.expects(:log).with("Tracked event! #<Net::HTTPCreated 201  readbody=true>")
+    ThisData.send(:track_with_response,
+      ip: "1.2.3.4",
+      user: {id: "the-users-uuid"}
+    )
+  end
+
+  test "unsuccessful track_with_response is logged" do
+    path = "https://api.thisdata.com/v1/events?api_key=#{ThisData.configuration.api_key}"
+    FakeWeb.register_uri(:post, path, body: '{"error": "message"}', status: 400)
+
+    ThisData.expects(:warn).with('Track failure! #<Net::HTTPBadRequest 400  readbody=true> {"error": "message"}')
+    ThisData.send(:track_with_response,
       ip: "1.2.3.4",
       user: {id: "the-users-uuid"}
     )
