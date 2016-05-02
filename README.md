@@ -27,21 +27,22 @@ http://help.thisdata.com
 
 #### Configuration
 
-Configure ThisData as follows:
+An example ThisData configuration is below. See `this_data/configuration.rb` for
+more options. For example, in production we recommend you turn on
+ the asynchronous and non-logging behaviour.
+
+If you're using Rails, you can generate this config file by following our
+[Set Up](#set-up) steps further down.
+
 
 ```ruby
+require 'this_data'
 ThisData.setup do |config|
   config.api_key = 'API_KEY_HERE' # Don't commit your key to source control!
   config.logger  = Logger.new($stdout)
   config.async   = false
 end
 ```
-
-See `this_data/configuration.rb` for more options, and some suggested
-Ruby on Rails options in `this_data/generators/install_generator.rb`.
-
-For example, in production you will probably want asynchronous and non-logging
-behaviour.
 
 #### Tracking an Event
 
@@ -127,6 +128,19 @@ end
 Note: as with many sensitive operations, taking different actions when an
 account exists vs. when an account doesn't exist can lead to a information
 disclosure through timing attacks.
+
+### Will this break my app?
+
+We hope not! We encourage you to use the asynchronous API call where possible
+just in case our end goes down. In all cases we have error handling to capture
+hard failures, but there may be edge-cases where timeouts or other bugs haven't
+been properly handled.
+
+So in your own app you could move tracking to a background job, enforce timeouts,
+add threading (safely!), or employ other methods which enforce good behaviour of
+third party gems.
+
+Read more: http://help.thisdata.com/docs/how-do-you-not-break-my-app
 
 
 ### Stuck?
