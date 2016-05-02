@@ -27,21 +27,22 @@ http://help.thisdata.com
 
 #### Configuration
 
-Configure ThisData as follows:
+An example ThisData configuration is below. See `this_data/configuration.rb` for
+more options. For example, in production you will probably want asynchronous and
+non-logging behaviour.
+
+If you're using Rails, you can generate this config file by following our
+[#set-up](Set Up) steps further down.
+
 
 ```ruby
+require 'this_data'
 ThisData.setup do |config|
   config.api_key = 'API_KEY_HERE' # Don't commit your key to source control!
   config.logger  = Logger.new($stdout)
   config.async   = false
 end
 ```
-
-See `this_data/configuration.rb` for more options, and some suggested
-Ruby on Rails options in `this_data/generators/install_generator.rb`.
-
-For example, in production you will probably want asynchronous and non-logging
-behaviour.
 
 #### Tracking an Event
 

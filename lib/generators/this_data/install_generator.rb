@@ -1,3 +1,4 @@
+require 'this_data'
 module ThisData
   class InstallGenerator < Rails::Generators::Base
 
