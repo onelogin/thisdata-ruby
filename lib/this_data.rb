@@ -7,10 +7,12 @@ require "this_data/verbs"
 require "this_data/client"
 require "this_data/configuration"
 require "this_data/track_request"
+require "this_data/score"
 
 module ThisData
 
   class << self
+    class VerifyAPIFailure < StandardError; end
 
     # Configuration Object (instance of ThisData::Configuration)
     attr_writer :configuration
@@ -51,6 +53,32 @@ module ThisData
         user_agent: user_agent,
         user: user
       })
+    end
+
+    # Uses ThisData::Client#verify to verify the legitimacy of a request against
+    #   known user behaviours.
+    #
+    # payload must be a Hash
+    #
+    # Returns a ThisData::Score object, or nil if a score could not be
+    #   generated (e.g. an API error, or a runtime error)
+    def verify(payload)
+      response = ThisData::Client.new.verify(payload)
+      success = response && response.success? # HTTParty doesn't like `.try`
+      if success
+        log("Verified payload! #{response.response.inspect}")
+        ThisData::Score.initialize_from_response(response)
+      else
+        warn("Verify failure! #{response.response.inspect} #{response.body}")
+        nil
+      end
+    rescue => e
+      ThisData.error("Failed to verify payload:")
+      ThisData.error(e)
+      e.backtrace.each do |line|
+        ThisData.error(line, prefix: false)
+      end
+      false
     end
 
     def log(message, level: 'info', prefix: true)

@@ -40,6 +40,18 @@ module ThisData
       post_event(event)
     end
 
+    # Verifies the legitimacy of an authenticated request against known user
+    #   behaviours.
+    # See http://help.thisdata.com/v1.0/docs/v1verify for more information.
+    # - payload     (Required: Hash) a Hash, containing the following keys:
+    #  - ip         (Required: String) the IP address of the request
+    #  - user_agent (Optional: String) the user agent from the request
+    #  - user       (Required: Hash)
+    #   - id        (Required: String)  a unique identifier for this User
+    def verify(payload)
+      post_verify(payload)
+    end
+
     private
 
       def version
@@ -48,6 +60,11 @@ module ThisData
 
       def post_event(payload_hash)
         path_with_key = "/events?api_key=#{ThisData.configuration.api_key}"
+        self.class.post(path_with_key, headers: @headers, body: JSON.generate(payload_hash))
+      end
+
+      def post_verify(payload_hash)
+        path_with_key = "/verify?api_key=#{ThisData.configuration.api_key}"
         self.class.post(path_with_key, headers: @headers, body: JSON.generate(payload_hash))
       end
 
