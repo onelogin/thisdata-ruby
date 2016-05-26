@@ -8,7 +8,7 @@ require 'fakeweb'
 class ThisData::UnitTest < Minitest::Test
   def setup
     FakeWeb.allow_net_connect = false
-    ThisData.configuration.api_key = "test api key"
+    ThisData.configuration.api_key = "test-api-key"
     ThisData.configuration.async = false
   end
 
