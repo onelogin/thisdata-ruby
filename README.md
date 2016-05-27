@@ -1,4 +1,4 @@
-# ThisData Ruby
+# ThisData Ruby [![Build Status](https://travis-ci.org/thisdata/thisdata-ruby.png?branch=master)](https://travis-ci.org/thisdata/thisdata-ruby)
 
 This gem allows you to use the ThisData Login Intelligence API.
 

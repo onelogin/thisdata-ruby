@@ -8,12 +8,12 @@ require 'fakeweb'
 class ThisData::UnitTest < Minitest::Test
   def setup
     FakeWeb.allow_net_connect = false
-    ThisData.configuration.api_key = "test api key"
+    ThisData.configuration.api_key = "test-api-key"
     ThisData.configuration.async = false
   end
 
   def register_successful_events
-    successful_path = "https://api.thisdata.com/v1/events?api_key=#{ThisData.configuration.api_key}"
+    successful_path = URI.encode("https://api.thisdata.com/v1/events?api_key=#{ThisData.configuration.api_key}")
     FakeWeb.register_uri(:post, successful_path, body: "", status: 202)
   end
 
