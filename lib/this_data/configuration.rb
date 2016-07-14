@@ -30,8 +30,8 @@ module ThisData
     config_option :logger
 
     # ThisData's JS library (optional) adds a cookie.
-    # If you're using the library, set this to true, so that we send the value
-    # along with track requests.
+    # If you're using the library, set this to true, so that we know to expect
+    # a cookie value
     config_option :expect_js_cookie
 
     # TrackRequest config options
