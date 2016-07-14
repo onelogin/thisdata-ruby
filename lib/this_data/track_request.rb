@@ -78,7 +78,7 @@ module ThisData
       # If the cookie is nil, then either you aren't using the JS library, or
       # the user likely has an ad-blocker.
       def td_cookie_value
-        cookie_value = cookies[ThisData::Configuration::JS_COOKIE_NAME] rescue nil
+        cookies[ThisData::Configuration::JS_COOKIE_NAME] rescue nil
       end
 
   end
