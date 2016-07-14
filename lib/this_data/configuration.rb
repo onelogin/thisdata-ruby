@@ -3,6 +3,9 @@ require "ostruct"
 module ThisData
   class Configuration
 
+    # ThisData's JS library (optional) adds a cookie with this name
+    JS_COOKIE_NAME = '__tdli'
+
     # Programatically create attr accessors for config_option
     def self.config_option(name)
       define_method(name) do
@@ -25,6 +28,11 @@ module ThisData
 
     # Log the events sent
     config_option :logger
+
+    # ThisData's JS library (optional) adds a cookie.
+    # If you're using the library, set this to true, so that we send the value
+    # along with track requests.
+    config_option :expect_js_cookie
 
     # TrackRequest config options
     # We will attempt to call this method on a Controller to get the user record
@@ -51,7 +59,8 @@ module ThisData
         user_id_method:     :id,
         user_name_method:   :name,
         user_email_method:  :email,
-        user_mobile_method: :mobile
+        user_mobile_method: :mobile,
+        expect_js_cookie:   false
       })
     end
 

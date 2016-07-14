@@ -34,6 +34,16 @@ module ThisData
         user:       user_details(user)
       }
 
+      # If we expect there to be a cookie configured, send it it along.
+      # If the cookie is nil, the user likely has an ad-blocker, but that's
+      # fine too.
+      if ThisData.configuration.expect_js_cookie
+        cookie_value = cookies[ThisData::Configuration::JS_COOKIE_NAME] rescue nil
+
+        event[:other] ||= {}
+        event[:other][:td_cookie_id] = cookie_value
+      end
+
       ThisData.track(event)
     rescue => e
       ThisData.error "Could not track event:"

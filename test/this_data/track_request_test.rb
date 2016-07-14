@@ -7,6 +7,7 @@ class FakeController
   # included
   attr_accessor :request
   attr_accessor :current_user
+  attr_accessor :cookies
   # And this is to test that changing method names works
   attr_accessor :foo_user
 end
@@ -18,6 +19,8 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     register_successful_events
     @controller = FakeController.new
     @controller.request = stub(remote_ip: nil, user_agent: nil)
+    @user = stub(id: "12345", email: "foo@bar.com", mobile: "+1234", name: "Foo Bar")
+    @controller.current_user = @user
   end
 
   test "user_details returns a Hash of user detail" do
@@ -32,14 +35,13 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
   end
 
   test "user_details can return lots of user details" do
-    user = stub(id: "12345", email: "foo@bar.com", mobile: "+1234", name: "Foo Bar")
     expected = {
       id: "12345",
       name: "Foo Bar",
       email: "foo@bar.com",
       mobile: "+1234"
     }
-    assert_equal expected, @controller.send(:user_details, user)
+    assert_equal expected, @controller.send(:user_details, @user)
   end
 
   test "thisdata_track will fetch a user from user_method" do
@@ -72,9 +74,6 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     request = stub(remote_ip: "1.2.3.4", user_agent: "Chrome User Agent")
     @controller.request = request
 
-    user = stub(id: "12345", email: "foo@bar.com", mobile: "+1234", name: "Foo Bar")
-    @controller.current_user = user
-
     expected = {
       ip: "1.2.3.4",
       user_agent: "Chrome User Agent",
@@ -91,36 +90,32 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     @controller.thisdata_track
   end
 
-  test "thisdata_track creates and posts an event containing user and request details" do
-    ThisData.expects(:track).with(has_key(verb: 'foo')).once
+  test "thisdata_track can override the verb" do
+    ThisData.expects(:track).with(has_entry(verb: 'foo')).once
     @controller.thisdata_track(verb: 'foo')
-  end
-
-  test "thisdata_track creates and posts an event containing user and request details" do
-    request = stub(remote_ip: "1.2.3.4", user_agent: "Chrome User Agent")
-    @controller.request = request
-
-    user = stub(id: "12345", email: "foo@bar.com", mobile: "+1234", name: "Foo Bar")
-    @controller.current_user = user
-
-    expected = {
-      ip: "1.2.3.4",
-      user_agent: "Chrome User Agent",
-      verb: "log-in",
-      user: {
-        id: "12345",
-        name: "Foo Bar",
-        email: "foo@bar.com",
-        mobile: "+1234"
-      }
-    }
-
-    ThisData.expects(:track).with(expected).once
-    @controller.thisdata_track
   end
 
   test "thisdata_track will silently handle errors" do
     ThisData.stubs(:track).raises(ArgumentError)
     assert_equal false, @controller.thisdata_track
+  end
+
+  test "will look for and pass a cookie when told to" do
+    # Tell TD to look for a cookie, and place the cookie
+    ThisData.configuration.expect_js_cookie = true
+    @controller.cookies = {ThisData::Configuration::JS_COOKIE_NAME => "uuid"}
+
+    ThisData.expects(:track).with(has_entry(other: {td_cookie_id: "uuid"})).once
+    @controller.thisdata_track
+  end
+
+  test "will look for a cookie and pass nil if missing" do
+    # Tell TD to look for a cookie, and place the cookie
+    ThisData.configuration.expect_js_cookie = true
+    @controller.cookies = {}
+
+
+    ThisData.expects(:track).with(has_entry(other: {td_cookie_id: nil})).once
+    @controller.thisdata_track
   end
 end
