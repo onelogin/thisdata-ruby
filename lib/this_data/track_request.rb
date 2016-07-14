@@ -27,22 +27,17 @@ module ThisData
         user = send(ThisData.configuration.user_method)
       end
 
+
       event = {
         verb:       verb,
         ip:         request.remote_ip,
         user_agent: request.user_agent,
-        user:       user_details(user)
+        user:       user_details(user),
+        other: {
+          td_cookie_expected: ThisData.configuration.expect_js_cookie,
+          td_cookie_id:       td_cookie_value,
+        }
       }
-
-      # If we expect there to be a cookie configured, send it it along.
-      # If the cookie is nil, the user likely has an ad-blocker, but that's
-      # fine too.
-      if ThisData.configuration.expect_js_cookie
-        cookie_value = cookies[ThisData::Configuration::JS_COOKIE_NAME] rescue nil
-
-        event[:other] ||= {}
-        event[:other][:td_cookie_id] = cookie_value
-      end
 
       ThisData.track(event)
     rescue => e
@@ -76,6 +71,14 @@ module ThisData
         else
           nil
         end
+      end
+
+      # When using the optional JavaScript library, a cookie is placed which
+      # helps us track devices.
+      # If the cookie is nil, then either you aren't using the JS library, or
+      # the user likely has an ad-blocker.
+      def td_cookie_value
+        cookie_value = cookies[ThisData::Configuration::JS_COOKIE_NAME] rescue nil
       end
 
   end

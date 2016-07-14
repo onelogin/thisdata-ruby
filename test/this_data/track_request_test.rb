@@ -83,6 +83,10 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
         name: "Foo Bar",
         email: "foo@bar.com",
         mobile: "+1234"
+      },
+      other: {
+        td_cookie_id: nil,
+        td_cookie_expected: false
       }
     }
 
@@ -100,12 +104,13 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     assert_equal false, @controller.thisdata_track
   end
 
-  test "will look for and pass a cookie when told to" do
+  test "will look for and pass a cookie and expected state" do
     # Tell TD to look for a cookie, and place the cookie
     ThisData.configuration.expect_js_cookie = true
     @controller.cookies = {ThisData::Configuration::JS_COOKIE_NAME => "uuid"}
 
-    ThisData.expects(:track).with(has_entry(other: {td_cookie_id: "uuid"})).once
+    expected = {other: {td_cookie_id: "uuid", td_cookie_expected: true}}
+    ThisData.expects(:track).with(has_entry(expected)).once
     @controller.thisdata_track
   end
 
@@ -114,8 +119,17 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     ThisData.configuration.expect_js_cookie = true
     @controller.cookies = {}
 
+    expected = {other: {td_cookie_id: nil, td_cookie_expected: true}}
+    ThisData.expects(:track).with(has_entry(expected)).once
+    @controller.thisdata_track
+  end
 
-    ThisData.expects(:track).with(has_entry(other: {td_cookie_id: nil})).once
+  test "will look for a cookie and pass nil if not expected" do
+    ThisData.configuration.expect_js_cookie = false
+    @controller.cookies = {}
+
+    expected = {other: {td_cookie_id: nil, td_cookie_expected: false}}
+    ThisData.expects(:track).with(has_entry(expected)).once
     @controller.thisdata_track
   end
 end
