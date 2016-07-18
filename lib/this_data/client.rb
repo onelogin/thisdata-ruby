@@ -36,6 +36,10 @@ module ThisData
     #                 *email and/or mobile MUST be passed if you want ThisData
     #                 to send 'Was This You?' notifications via email and/or SMS
     #   - name      (Optional: String)  the user's name, used in notifications
+    #  - session   (Optional: Hash) details about the user's session
+    #   - td_cookie_expected (Optional: Boolean) whether you expect a JS cookie
+    #                         to be present
+    #   - td_cookie_id       (Optional: String) the value of the JS cookie
     def track(event)
       post_event(event)
     end

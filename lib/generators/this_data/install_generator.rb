@@ -53,6 +53,13 @@ ThisData.setup do |config|
   # Default: :mobile
   # config.user_mobile_method = :mobile
 
+
+  # ThisData's JS library (optional) adds a cookie.
+  # If you're using the library, set this to true, so that we know to expect
+  # a cookie value
+  # Default: false
+  # config.expect_js_cookie = true
+
 end
 EOS
       end
