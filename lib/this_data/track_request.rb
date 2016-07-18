@@ -33,7 +33,7 @@ module ThisData
         ip:         request.remote_ip,
         user_agent: request.user_agent,
         user:       user_details(user),
-        other: {
+        session: {
           td_cookie_expected: ThisData.configuration.expect_js_cookie,
           td_cookie_id:       td_cookie_value,
         }

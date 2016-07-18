@@ -84,7 +84,7 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
         email: "foo@bar.com",
         mobile: "+1234"
       },
-      other: {
+      session: {
         td_cookie_id: nil,
         td_cookie_expected: false
       }
@@ -109,7 +109,7 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     ThisData.configuration.expect_js_cookie = true
     @controller.cookies = {ThisData::Configuration::JS_COOKIE_NAME => "uuid"}
 
-    expected = {other: {td_cookie_id: "uuid", td_cookie_expected: true}}
+    expected = {session: {td_cookie_id: "uuid", td_cookie_expected: true}}
     ThisData.expects(:track).with(has_entry(expected)).once
     @controller.thisdata_track
   end
@@ -119,7 +119,7 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     ThisData.configuration.expect_js_cookie = true
     @controller.cookies = {}
 
-    expected = {other: {td_cookie_id: nil, td_cookie_expected: true}}
+    expected = {session: {td_cookie_id: nil, td_cookie_expected: true}}
     ThisData.expects(:track).with(has_entry(expected)).once
     @controller.thisdata_track
   end
@@ -128,7 +128,7 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     ThisData.configuration.expect_js_cookie = false
     @controller.cookies = {}
 
-    expected = {other: {td_cookie_id: nil, td_cookie_expected: false}}
+    expected = {session: {td_cookie_id: nil, td_cookie_expected: false}}
     ThisData.expects(:track).with(has_entry(expected)).once
     @controller.thisdata_track
   end
