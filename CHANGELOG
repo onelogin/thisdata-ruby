@@ -1,3 +1,8 @@
+# 0.1.5
+
+  - Allows automatic tracking of ThisData's optional JavaScript cookie value
+    https://github.com/thisdata/thisdata-ruby/issues/13
+
 # 0.1.4
 
   - ThisData wasn't being required properly: https://github.com/thisdata/thisdata-ruby/issues/8

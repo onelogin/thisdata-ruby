@@ -93,7 +93,9 @@ that's the place to do it!
 `ThisData.track`.**
 
 However, we do provide a `ThisData::TrackRequest` module which, when included in
-an ActionController, gives you a simple way to track requests.
+an ActionController, gives you a simple way to track requests. The advantage
+is that this module knows how to get request details automagically, like the IP,
+user agent, and ThisData's tracking cookie value (if you've turned that on).
 
 You include the module, then call `thisdata_track`. Easy!
 
