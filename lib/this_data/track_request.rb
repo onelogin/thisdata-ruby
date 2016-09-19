@@ -20,11 +20,12 @@ module ThisData
     #       `current_user`.
     #     The object must respond to at least
     #       `ThisData.configuration.user_id_method`, which defaults to `id`.
-    #   authenticated: (Boolean, Optional, default nil). If the user being
-    #     tracked has not yet authenticated successfully, set this to false.
-    #     This is only needed if passing a user manually and that user hasn't
-    #     logged in yet (e.g. a log-in-denied event), or if user_method can
-    #     return an unauthenticated user.
+    #   authenticated: (Boolean, Optional, default nil). Used to indicate
+    #     whether a user is authenticated or not. By default we assume that if
+    #     there is a user specified then they are authenticated, but in some
+    #     cases (like a log-in-denied event) you might want to track the user
+    #     but tell us that they are not authenticated.
+    #     In these situations you should set `authenticated` to false.
     #
     # Returns the result of ThisData.track (an HTTPartyResponse)
     def thisdata_track(verb: ThisData::Verbs::LOG_IN, user: nil, authenticated: nil)
@@ -37,7 +38,7 @@ module ThisData
       user_details = user_details(user)
 
       # If specified, set the authenticated state of the user
-      unless authenticated.eql? nil
+      unless authenticated.nil?
         user_details.merge!(authenticated: authenticated)
       end
 
