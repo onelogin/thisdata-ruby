@@ -20,19 +20,32 @@ module ThisData
     #       `current_user`.
     #     The object must respond to at least
     #       `ThisData.configuration.user_id_method`, which defaults to `id`.
+    #   authenticated: (Boolean, Optional, default nil). If the user being
+    #     tracked has not yet authenticated successfully, set this to false.
+    #     This is only needed if passing a user manually and that user hasn't
+    #     logged in yet (e.g. a log-in-denied event), or if user_method can
+    #     return an unauthenticated user.
     #
     # Returns the result of ThisData.track (an HTTPartyResponse)
-    def thisdata_track(verb: ThisData::Verbs::LOG_IN, user: nil)
+    def thisdata_track(verb: ThisData::Verbs::LOG_IN, user: nil, authenticated: nil)
+      # Fetch the user unless it's been overridden
       if user.nil?
         user = send(ThisData.configuration.user_method)
       end
 
+      # Get a Hash of details for the user
+      user_details = user_details(user)
+
+      # If specified, set the authenticated state of the user
+      unless authenticated.eql? nil
+        user_details.merge!(authenticated: authenticated)
+      end
 
       event = {
         verb:       verb,
         ip:         request.remote_ip,
         user_agent: request.user_agent,
-        user:       user_details(user),
+        user:       user_details,
         session: {
           td_cookie_expected: ThisData.configuration.expect_js_cookie,
           td_cookie_id:       td_cookie_value,
