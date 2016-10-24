@@ -117,7 +117,8 @@ class SessionsController < ApplicationController
       if attempted_user = User.find_by(email: params[:email])
         thisdata_track(
           verb: ThisData::Verbs::LOG_IN_DENIED,
-          user: attempted_user
+          user: attempted_user,
+          authenticated: false
         )
       else
         # email and password were both incorrect
