@@ -15,6 +15,9 @@ module ThisData
       @headers = {
         "User-Agent" => USER_AGENT
       }
+      @default_query = {
+        api_key: ThisData.configuration.api_key
+      }
     end
 
     def require_api_key
@@ -41,18 +44,27 @@ module ThisData
     #                         to be present
     #   - td_cookie_id       (Optional: String) the value of the JS cookie
     def track(event)
-      post_event(event)
+      post('/events', body: JSON.generate(event))
+    end
+
+    # Perform a GET request against the ThisData API, with the API key
+    # prepopulated
+    def get(path, query: {})
+      query = @default_query.merge(query)
+      self.class.get(path, query: query, headers: @headers)
+    end
+
+    # Perform a POST request against the ThisData API, with the API key
+    # prepopulated
+    def post(path, query: {}, body: {})
+      query = @default_query.merge(query)
+      self.class.post(path, query: query, headers: @headers, body: body)
     end
 
     private
 
       def version
         ThisData.configuration.version
-      end
-
-      def post_event(payload_hash)
-        path_with_key = "/events?api_key=#{ThisData.configuration.api_key}"
-        self.class.post(path_with_key, headers: @headers, body: JSON.generate(payload_hash))
       end
 
       def print_api_key_warning

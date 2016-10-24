@@ -66,6 +66,36 @@ ThisData.track(
 )
 ```
 
+#### Verifying a User
+
+```ruby
+response = ThisData.verify(
+  ip: request.remote_ip,
+  user_agent: request.user_agent,
+  verb: ThisData::Verbs::LOG_IN,
+  user: {
+    id: user.id
+  }
+)
+
+if response.risk_level.eql? ThisData::RISK_LEVEL_GREEN
+  # Let them log in
+else
+  # Challenge for a Two Factor Authentication code
+end
+```
+
+
+#### Getting Events (Audit Log)
+
+```ruby
+events = ThisData::Event.all(
+  verb: ThisData::Verbs::LOG_IN,
+  user_id: user.id,
+  limit: 25,
+  offset: 50
+)
+```
 
 ### Rails
 
@@ -131,6 +161,7 @@ end
 Note: as with many sensitive operations, taking different actions when an
 account exists vs. when an account doesn't exist can lead to a information
 disclosure through timing attacks.
+
 
 ### Will this break my app?
 

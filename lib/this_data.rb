@@ -2,6 +2,7 @@ require "httparty"
 require "logger"
 require "json"
 
+require "this_data/event"
 require "this_data/version"
 require "this_data/verbs"
 require "this_data/client"
