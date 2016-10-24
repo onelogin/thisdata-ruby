@@ -99,6 +99,31 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     @controller.thisdata_track(verb: 'foo')
   end
 
+  test "thisdata_track can set the authenticated state of a user" do
+    request = stub(remote_ip: "1.2.3.4", user_agent: "Chrome User Agent")
+    @controller.request = request
+
+    expected = {
+      ip: "1.2.3.4",
+      user_agent: "Chrome User Agent",
+      verb: "log-in",
+      user: {
+        id: "12345",
+        name: "Foo Bar",
+        email: "foo@bar.com",
+        mobile: "+1234",
+        authenticated: false,
+      },
+      session: {
+        td_cookie_id: nil,
+        td_cookie_expected: false
+      }
+    }
+
+    ThisData.expects(:track).with(expected).once
+    @controller.thisdata_track(authenticated: false)
+  end
+
   test "thisdata_track will silently handle errors" do
     ThisData.stubs(:track).raises(ArgumentError)
     assert_equal false, @controller.thisdata_track
