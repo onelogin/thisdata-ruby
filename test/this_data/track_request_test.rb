@@ -174,6 +174,11 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
   end
 
   test "thisdata_verify will return nil if error" do
+    @controller.current_user = nil
+    assert_equal nil, @controller.thisdata_verify
+  end
+
+  test "thisdata_verify will return nil if there is no user" do
     ThisData.stubs(:verify).raises(ArgumentError)
     assert_equal nil, @controller.thisdata_verify
   end
