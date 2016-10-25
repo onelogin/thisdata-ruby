@@ -75,7 +75,7 @@ response = ThisData.verify(
   }
 )
 
-if response.risk_level.eql? ThisData::RISK_LEVEL_GREEN
+if response["risk_level"].eql? ThisData::RISK_LEVEL_GREEN
   # Let them log in
 else
   # Challenge for a Two Factor Authentication code

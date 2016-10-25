@@ -9,7 +9,7 @@ module ThisData
     #
     # Returns: Array of OpenStruct Event objects
     def self.all(options={})
-      response = ThisData::Client.new.get('/events', query: options)
+      response = ThisData::Client.new.get(ThisData::EVENTS_ENDPOINT, query: options)
       # Use NestedStruct to turn this Array of deep Hashes into an array of
       # OpenStructs
       response.parsed_response["results"].collect do |event_hash|

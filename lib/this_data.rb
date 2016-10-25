@@ -12,6 +12,15 @@ require "util/nested_struct"
 
 module ThisData
 
+  # API Endpoint Paths
+  EVENTS_ENDPOINT   = '/events'
+  VERIFY_ENDPOINT   = '/verify'
+
+  # Risk level constants, defined at http://help.thisdata.com/docs/apiv1verify#what-does-the-risk_level-mean
+  RISK_LEVEL_GREEN  = 'green'
+  RISK_LEVEL_ORANGE = 'orange'
+  RISK_LEVEL_RED    = 'red'
+
   class << self
 
     # Configuration Object (instance of ThisData::Configuration)
@@ -60,7 +69,7 @@ module ThisData
     # Returns a Hash
     def verify(params)
       response = Client.new.post(
-        '/verify',
+        ThisData::VERIFY_ENDPOINT,
         body: JSON.generate(params)
       )
       response.parsed_response

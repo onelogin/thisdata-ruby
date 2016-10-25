@@ -31,7 +31,7 @@ module ThisData
     #               See http://help.thisdata.com/v1.0/docs/apiv1events for a
     #               full & current list of available options.
     def track(event)
-      post('/events', body: JSON.generate(event))
+      post(ThisData::EVENTS_ENDPOINT, body: JSON.generate(event))
     end
 
     # Perform a GET request against the ThisData API, with the API key
