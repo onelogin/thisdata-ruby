@@ -52,16 +52,14 @@ to our app:
 
 ```ruby
 ThisData.track(
-  {
-    ip: request.remote_ip,
-    user_agent: request.user_agent,
-    verb: ThisData::Verbs::LOG_IN,
-    user: {
-      id: user.id.to_s,
-      name: user.name,
-      email: user.email,
-      mobile: user.mobile
-    }
+  ip: request.remote_ip,
+  user_agent: request.user_agent,
+  verb: ThisData::Verbs::LOG_IN,
+  user: {
+    id: user.id.to_s,
+    name: user.name,
+    email: user.email,
+    mobile: user.mobile
   }
 )
 ```
@@ -72,7 +70,6 @@ ThisData.track(
 response = ThisData.verify(
   ip: request.remote_ip,
   user_agent: request.user_agent,
-  verb: ThisData::Verbs::LOG_IN,
   user: {
     id: user.id
   }

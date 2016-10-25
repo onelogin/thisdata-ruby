@@ -2,12 +2,15 @@
 # track method which looks at the request and current_user variables to
 # generate an event.
 #
+# This module will also provide access to the verify API.
+#
 # If you include this in a non-ActionController instance, you must respond to
 # `request` and `ThisData.configuration.user_method`
 #
 module ThisData
   module TrackRequest
     class ThisDataTrackError < StandardError; end
+    class CurrentUserRequiredError < ArgumentError; end
 
     # Will pull request and user details from the controller, and send an event
     # to ThisData.
@@ -59,6 +62,51 @@ module ThisData
       ThisData.error e
       ThisData.error e.backtrace[0..5].join("\n")
       false
+    end
+
+    # Will pull request and user details from the controller, and use
+    # ThisData's verify API to determine how likely it is that the person who
+    # is currently logged in has had their account compromised.
+    #
+    # Arguments:
+    #   user: (Object, Required). If you want to override the user record
+    #     that we would usually fetch, you can pass it here.
+    #     Unless a user is specified here we'll attempt to get the user record
+    #       as specified in the ThisData gem configuration. This defaults to
+    #       `current_user`.
+    #     The object must respond to at least
+    #       `ThisData.configuration.user_id_method`, which defaults to `id`.
+    #
+    #
+    # Returns a Hash with risk information.
+    # See http://help.thisdata.com/docs/apiv1verify for details
+    def thisdata_verify(user: nil)
+      # Fetch the user unless it's been overridden
+      if user.nil?
+        user = send(ThisData.configuration.user_method)
+      end
+      # If it's still nil, raise an error
+      raise CurrentUserRequiredError, "A user must be provided for verification" if user.nil?
+
+      # Get a Hash of details for the user
+      user_details = user_details(user)
+
+      event = {
+        ip:         request.remote_ip,
+        user_agent: request.user_agent,
+        user:       user_details,
+        session: {
+          td_cookie_expected: ThisData.configuration.expect_js_cookie,
+          td_cookie_id:       td_cookie_value,
+        }
+      }
+
+      ThisData.verify(event)
+    rescue => e
+      ThisData.error "Could not verify current user:"
+      ThisData.error e
+      ThisData.error e.backtrace[0..5].join("\n")
+      nil
     end
 
     private

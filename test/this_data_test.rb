@@ -72,4 +72,25 @@ class ThisDataTest < ThisData::UnitTest
     )
   end
 
+
+  test "verify creates client and uses post" do
+    client = stub()
+    ThisData::Client.expects(:new).returns(client)
+    response = stub("success?" => true, parsed_response: {})
+    params = {foo: "bar"}
+    client.expects(:post).with('/verify', {body: params.to_json}).returns(response)
+    assert ThisData.send(:verify, params)
+  end
+
+  test "verify parses JSON response" do
+    response = {
+      score: 0.123,
+      risk_level: "green"
+    }
+    expected_path = URI.encode("https://api.thisdata.com/v1/verify?api_key=#{ThisData.configuration.api_key}")
+    FakeWeb.register_uri(:post, expected_path, status: 200, body: response.to_json, content_type: "application/json")
+    result = ThisData.send(:verify, {})
+    assert_equal 0.123, result["score"]
+  end
+
 end
