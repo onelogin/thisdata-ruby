@@ -166,6 +166,40 @@ account exists vs. when an account doesn't exist can lead to a information
 disclosure through timing attacks.
 
 
+#### Verifying
+
+Similar to the approach above, there is also a convenience method for verifying
+the current user.
+
+```ruby
+class SessionsController < ApplicationController
+  include ThisData::TrackRequest
+
+  def create
+    if User.authenticate(params[:email], params[:password])
+
+      # They used the right credentials, but does this login look unusual?
+      response = thisdata_verify
+
+      if ThisData::RISK_LEVEL_GREEN.eql? response["risk_level"]
+        # The login looks OK. Do the things one usually does for a successful
+        # auth
+
+        # And track it
+        thisdata_track
+      else
+        # There is a chance the account could be breached.
+        # Confirm authentication by asking for a Two Factor Authentication code
+        # ....
+      end
+
+    else
+      # Their credentials are wrong...
+    end
+  end
+end
+```
+
 ### Will this break my app?
 
 We hope not! We encourage you to use the asynchronous API call where possible
