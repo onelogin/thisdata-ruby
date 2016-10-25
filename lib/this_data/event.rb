@@ -1,6 +1,5 @@
 # A wrapper for the GET /events API
 #
-#
 module ThisData
   class Event
 
@@ -8,10 +7,14 @@ module ThisData
     # Available options can be found at
     #   http://help.thisdata.com/docs/v1getevents
     #
-    # Returns: Array of Hashes
+    # Returns: Array of OpenStruct Event objects
     def self.all(options={})
       response = ThisData::Client.new.get('/events', query: options)
-      response.parsed_response["results"]
+      # Use NestedStruct to turn this Array of deep Hashes into an array of
+      # OpenStructs
+      response.parsed_response["results"].collect do |event_hash|
+        NestedStruct.new(event_hash)
+      end
     end
 
   end

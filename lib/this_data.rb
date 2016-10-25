@@ -8,6 +8,7 @@ require "this_data/verbs"
 require "this_data/client"
 require "this_data/configuration"
 require "this_data/track_request"
+require "util/nested_struct"
 
 module ThisData
 

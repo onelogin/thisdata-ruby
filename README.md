@@ -95,6 +95,12 @@ events = ThisData::Event.all(
   limit: 25,
   offset: 50
 )
+
+events.length
+=> 25
+
+events.first.user.id
+=> "112233"
 ```
 
 ### Rails
