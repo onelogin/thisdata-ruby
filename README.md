@@ -75,7 +75,7 @@ response = ThisData.verify(
   }
 )
 
-if response["risk_level"].eql? ThisData::RISK_LEVEL_GREEN
+if response["risk_level"] == ThisData::RISK_LEVEL_GREEN
   # Let them log in
 else
   # Challenge for a Two Factor Authentication code
@@ -181,7 +181,7 @@ class SessionsController < ApplicationController
       # They used the right credentials, but does this login look unusual?
       response = thisdata_verify
 
-      if ThisData::RISK_LEVEL_GREEN.eql? response["risk_level"]
+      if response["risk_level"] == ThisData::RISK_LEVEL_GREEN
         # The login looks OK. Do the things one usually does for a successful
         # auth
 

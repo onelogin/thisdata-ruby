@@ -10,7 +10,7 @@
 module ThisData
   module TrackRequest
     class ThisDataTrackError < StandardError; end
-    class CurrentUserRequiredError < ArgumentError; end
+    class NoUserSpecifiedError < ArgumentError; end
 
     # Will pull request and user details from the controller, and send an event
     # to ThisData.
@@ -86,7 +86,7 @@ module ThisData
         user = send(ThisData.configuration.user_method)
       end
       # If it's still nil, raise an error
-      raise CurrentUserRequiredError, "A user must be provided for verification" if user.nil?
+      raise NoUserSpecifiedError, "A user must be provided for verification" if user.nil?
 
       # Get a Hash of details for the user
       user_details = user_details(user)

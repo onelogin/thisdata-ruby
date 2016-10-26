@@ -11,7 +11,7 @@ task :test do
   begin
     Rake::Task['test_task'].invoke
   rescue
-    # Supress the verbose failure output of TestTake
+    # Supress the verbose failure output of TestTask
   end
 end
 
