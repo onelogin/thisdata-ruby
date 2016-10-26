@@ -52,20 +52,53 @@ to our app:
 
 ```ruby
 ThisData.track(
-  {
-    ip: request.remote_ip,
-    user_agent: request.user_agent,
-    verb: ThisData::Verbs::LOG_IN,
-    user: {
-      id: user.id.to_s,
-      name: user.name,
-      email: user.email,
-      mobile: user.mobile
-    }
+  ip: request.remote_ip,
+  user_agent: request.user_agent,
+  verb: ThisData::Verbs::LOG_IN,
+  user: {
+    id: user.id.to_s,
+    name: user.name,
+    email: user.email,
+    mobile: user.mobile
   }
 )
 ```
 
+#### Verifying a User
+
+```ruby
+response = ThisData.verify(
+  ip: request.remote_ip,
+  user_agent: request.user_agent,
+  user: {
+    id: user.id
+  }
+)
+
+if response["risk_level"] == ThisData::RISK_LEVEL_GREEN
+  # Let them log in
+else
+  # Challenge for a Two Factor Authentication code
+end
+```
+
+
+#### Getting Events (Audit Log)
+
+```ruby
+events = ThisData::Event.all(
+  verb: ThisData::Verbs::LOG_IN,
+  user_id: user.id,
+  limit: 25,
+  offset: 50
+)
+
+events.length
+=> 25
+
+events.first.user.id
+=> "112233"
+```
 
 ### Rails
 
@@ -131,6 +164,41 @@ end
 Note: as with many sensitive operations, taking different actions when an
 account exists vs. when an account doesn't exist can lead to a information
 disclosure through timing attacks.
+
+
+#### Verifying
+
+Similar to the approach above, there is also a convenience method for verifying
+the current user.
+
+```ruby
+class SessionsController < ApplicationController
+  include ThisData::TrackRequest
+
+  def create
+    if User.authenticate(params[:email], params[:password])
+
+      # They used the right credentials, but does this login look unusual?
+      response = thisdata_verify
+
+      if response["risk_level"] == ThisData::RISK_LEVEL_GREEN
+        # The login looks OK. Do the things one usually does for a successful
+        # auth
+
+        # And track it
+        thisdata_track
+      else
+        # There is a chance the account could be breached.
+        # Confirm authentication by asking for a Two Factor Authentication code
+        # ....
+      end
+
+    else
+      # Their credentials are wrong...
+    end
+  end
+end
+```
 
 ### Will this break my app?
 

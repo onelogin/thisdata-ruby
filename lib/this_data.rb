@@ -2,13 +2,24 @@ require "httparty"
 require "logger"
 require "json"
 
+require "this_data/event"
 require "this_data/version"
 require "this_data/verbs"
 require "this_data/client"
 require "this_data/configuration"
 require "this_data/track_request"
+require "util/nested_struct"
 
 module ThisData
+
+  # API Endpoint Paths
+  EVENTS_ENDPOINT   = '/events'
+  VERIFY_ENDPOINT   = '/verify'
+
+  # Risk level constants, defined at http://help.thisdata.com/docs/apiv1verify#what-does-the-risk_level-mean
+  RISK_LEVEL_GREEN  = 'green'
+  RISK_LEVEL_ORANGE = 'orange'
+  RISK_LEVEL_RED    = 'red'
 
   class << self
 
@@ -27,17 +38,41 @@ module ThisData
       configuration.defaults
     end
 
-    # Tracks an event. If `ThisData.configuration.async` is true, this action
-    # will be performed in a new Thread.
-    # Event must be a Hash
-    # When performed asynchronously, true is always returned.
-    # Otherwise an HTTPRequest is returned.
+    # Tracks a user initiated event which has occurred within your app, e.g.
+    # a user logging in.
+    #
+    # Performs asynchronously if ThisData.configuration.async is true.
+    #
+    # Parameters:
+    # - event       (Required: Hash) a Hash containing details about the event.
+    #               See http://help.thisdata.com/v1.0/docs/apiv1events for a
+    #               full & current list of available options.
     def track(event)
       if ThisData.configuration.async
         track_async(event)
       else
         track_with_response(event)
       end
+    end
+
+    # Verify asks ThisData's API "is this request really from this user?",
+    # and returns a response with a risk score.
+    #
+    # Note: this method does not perform error handling.
+    #
+    # Parameters:
+    # - params      (Required: Hash) a Hash containing details about the current
+    #               request & user.
+    #               See http://help.thisdata.com/docs/apiv1verify for a
+    #               full & current list of available options.
+    #
+    # Returns a Hash
+    def verify(params)
+      response = Client.new.post(
+        ThisData::VERIFY_ENDPOINT,
+        body: JSON.generate(params)
+      )
+      response.parsed_response
     end
 
     # A helper method to track a log-in event. Validates that the minimum

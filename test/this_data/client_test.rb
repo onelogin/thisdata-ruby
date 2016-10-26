@@ -29,4 +29,20 @@ class ThisData::ClientTest < ThisData::UnitTest
     assert response.success?
   end
 
+  def test_get_adds_api_key
+    @client.class.expects(:get).with('foo', has_entries(
+      query: {api_key: "test-api-key"},
+      headers: has_key("User-Agent")
+    ))
+    response = @client.get('foo')
+  end
+
+  def test_post_adds_api_key
+    @client.class.expects(:post).with('foo', has_entries(
+      query: {api_key: "test-api-key"},
+      headers: has_key("User-Agent")
+    ))
+    response = @client.post('foo')
+  end
+
 end

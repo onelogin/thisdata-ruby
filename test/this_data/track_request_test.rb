@@ -157,4 +157,54 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
     ThisData.expects(:track).with(has_entry(expected)).once
     @controller.thisdata_track
   end
+
+
+
+  test "thisdata_verify will fetch a user from user_method" do
+    user = stub(id: "12345")
+    @controller.current_user = user
+    @controller.expects(:user_details).with(user)
+    @controller.send(:thisdata_verify)
+  end
+
+  test "thisdata_verify accepts an explicit user instance" do
+    user = stub(id: "12345")
+    @controller.expects(:user_details).with(user)
+    @controller.send(:thisdata_verify, user: user)
+  end
+
+  test "thisdata_verify will return nil if error" do
+    @controller.current_user = nil
+    assert_equal nil, @controller.thisdata_verify
+  end
+
+  test "thisdata_verify will return nil if there is no user" do
+    ThisData.stubs(:verify).raises(ArgumentError)
+    assert_equal nil, @controller.thisdata_verify
+  end
+
+  test "thisdata_verify creates and posts an event containing user and request details" do
+    ThisData.configuration.expect_js_cookie = true
+    @controller.cookies = {ThisData::Configuration::JS_COOKIE_NAME => "uuid"}
+    request = stub(remote_ip: "1.2.3.4", user_agent: "Chrome User Agent")
+    @controller.request = request
+
+    expected = {
+      ip: "1.2.3.4",
+      user_agent: "Chrome User Agent",
+      user: {
+        id: "12345",
+        name: "Foo Bar",
+        email: "foo@bar.com",
+        mobile: "+1234"
+      },
+      session: {
+        td_cookie_id: "uuid",
+        td_cookie_expected: true
+      }
+    }
+
+    ThisData.expects(:verify).with(expected).once
+    @controller.thisdata_verify
+  end
 end
