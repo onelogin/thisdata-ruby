@@ -48,6 +48,12 @@ module ThisData
       self.class.post(path, query: query, headers: @headers, body: body)
     end
 
+    # Perform a DELETE request against the ThisData API, with the API key
+    # prepopulated
+    def delete(path)
+      self.class.delete(path, query: @default_query, headers: @headers)
+    end
+
     private
 
       def version

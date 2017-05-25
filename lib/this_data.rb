@@ -2,6 +2,7 @@ require "httparty"
 require "logger"
 require "json"
 
+require "this_data/rule"
 require "this_data/event"
 require "this_data/version"
 require "this_data/verbs"
@@ -15,6 +16,7 @@ module ThisData
   # API Endpoint Paths
   EVENTS_ENDPOINT   = '/events'
   VERIFY_ENDPOINT   = '/verify'
+  RULES_ENDPOINT    = '/rules'
 
   # Risk level constants, defined at http://help.thisdata.com/docs/apiv1verify#what-does-the-risk_level-mean
   RISK_LEVEL_GREEN  = 'green'
