@@ -100,6 +100,59 @@ events.first.user.id
 => "112233"
 ```
 
+#### Managing custom Rules
+You can get, create, update and delete custom rules. Note that no error handling is done
+within the API wrapper so you will need to watch out for error `messages` in the 
+response body of each call. 
+
+Create a rule
+```
+# returns an OpenStruct rule
+
+ThisData::Rule.create({{
+  name: "Blacklist all ipv4 addresses",
+  description: "Blocks every possible ipv4 address",
+  type: "blacklist",
+  target: "location.ip",
+  filters: ["0.0.0.0/0"]
+})
+```
+
+List all rules
+```
+rules = ThisData::Rule.all
+
+# returns an array of OpenStruct rules
+```
+
+Find a single rule
+```
+rule = ThisData::Rule.find(1234567)
+
+# returns an OpenStruct rule
+rule.id 
+rule.name
+rule.description
+...
+```
+
+Update a rule
+```
+# id is reqired. Other params are optional
+
+ThisData::Rule.create({{
+  id: "123456",
+  filters: ["0.0.0.0/0",""]
+})
+```
+
+Delete a rule
+```
+deleted = ThisData::Rule.delete(123456)
+
+# returns bool
+```
+
 ### Rails
 
 #### Set Up
