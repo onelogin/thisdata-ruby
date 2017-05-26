@@ -109,38 +109,34 @@ Create a rule
 ```ruby
 # returns an OpenStruct rule
 
-ThisData::Rule.create({{
+rule = ThisData::Rule.create({{
   name: "Blacklist all ipv4 addresses",
   description: "Blocks every possible ipv4 address",
   type: "blacklist",
   target: "location.ip",
   filters: ["0.0.0.0/0"]
 })
+
+puts rule.id 
+puts rule.name
+...
 ```
 
 List all rules
 ```ruby
 rules = ThisData::Rule.all
-
-# returns an array of OpenStruct rules
 ```
 
 Find a single rule
 ```ruby
 rule = ThisData::Rule.find(1234567)
-
-# returns an OpenStruct rule
-rule.id 
-rule.name
-rule.description
-...
 ```
 
 Update a rule
 ```ruby
 # id is reqired. Other params are optional
 
-ThisData::Rule.create({{
+ThisData::Rule.update({{
   id: "123456",
   filters: ["0.0.0.0/0",""]
 })
@@ -148,9 +144,8 @@ ThisData::Rule.create({{
 
 Delete a rule
 ```ruby
-deleted = ThisData::Rule.delete(123456)
-
 # returns bool
+ThisData::Rule.delete(123456)
 ```
 
 ### Rails
