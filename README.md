@@ -109,7 +109,7 @@ Create a rule
 ```ruby
 # returns an OpenStruct rule
 
-rule = ThisData::Rule.create({{
+rule = ThisData::Rule.create({
   name: "Blacklist all ipv4 addresses",
   description: "Blocks every possible ipv4 address",
   type: "blacklist",
@@ -136,7 +136,7 @@ Update a rule
 ```ruby
 # id is reqired. Other params are optional
 
-ThisData::Rule.update({{
+ThisData::Rule.update({
   id: "123456",
   filters: ["0.0.0.0/0",""]
 })
