@@ -106,7 +106,7 @@ within the API wrapper so you will need to watch out for error `messages` in the
 response body of each call. 
 
 Create a rule
-```
+```ruby
 # returns an OpenStruct rule
 
 ThisData::Rule.create({{
@@ -119,14 +119,14 @@ ThisData::Rule.create({{
 ```
 
 List all rules
-```
+```ruby
 rules = ThisData::Rule.all
 
 # returns an array of OpenStruct rules
 ```
 
 Find a single rule
-```
+```ruby
 rule = ThisData::Rule.find(1234567)
 
 # returns an OpenStruct rule
@@ -137,7 +137,7 @@ rule.description
 ```
 
 Update a rule
-```
+```ruby
 # id is reqired. Other params are optional
 
 ThisData::Rule.create({{
@@ -147,7 +147,7 @@ ThisData::Rule.create({{
 ```
 
 Delete a rule
-```
+```ruby
 deleted = ThisData::Rule.delete(123456)
 
 # returns bool
