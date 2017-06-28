@@ -49,11 +49,11 @@ module ThisData
     # - event       (Required: Hash) a Hash containing details about the event.
     #               See http://help.thisdata.com/v1.0/docs/apiv1events for a
     #               full & current list of available options.
-    def track(event, query: {})
+    def track(event, options={})
       if ThisData.configuration.async
-        track_async(event, query: query)
+        track_async(event, options)
       else
-        track_with_response(event, query: query)
+        track_with_response(event, options)
       end
     end
 
@@ -69,11 +69,11 @@ module ThisData
     #               full & current list of available options.
     #
     # Returns a Hash
-    def verify(params, query: {})
+    def verify(params, options={})
       response = Client.new.post(
         ThisData::VERIFY_ENDPOINT,
         body: JSON.generate(params),
-        query: query
+        query: options
       )
       response.parsed_response
     end
@@ -110,8 +110,8 @@ module ThisData
       # Event must be a Hash.
       # Rescues and logs all exceptions.
       # Returns an HTTPResponse
-      def track_with_response(event, query: {})
-        response = Client.new.track(event, query: query)
+      def track_with_response(event, options={})
+        response = Client.new.track(event, options)
         success = response && response.success? # HTTParty doesn't like `.try`
         if success
           log("Tracked event! #{response.response.inspect}")
@@ -130,9 +130,9 @@ module ThisData
 
       # Performs the track function within a new Thread, so it is non blocking.
       # Returns the Thread created
-      def track_async(event, query: {})
+      def track_async(event, options={})
         Thread.new do
-          track_with_response(event, query: query)
+          track_with_response(event, options)
         end
       rescue => e
         ThisData.error("Cannot create Thread: #{e.inspect}")

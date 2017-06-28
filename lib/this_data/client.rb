@@ -30,8 +30,8 @@ module ThisData
     # - event       (Required: Hash) a Hash containing details about the event.
     #               See http://help.thisdata.com/v1.0/docs/apiv1events for a
     #               full & current list of available options.
-    def track(event, query: {})
-      post(ThisData::EVENTS_ENDPOINT, query: query, body: JSON.generate(event))
+    def track(event, options={})
+      post(ThisData::EVENTS_ENDPOINT, query: options, body: JSON.generate(event))
     end
 
     # Perform a GET request against the ThisData API, with the API key
