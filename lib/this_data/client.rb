@@ -50,8 +50,9 @@ module ThisData
 
     # Perform a DELETE request against the ThisData API, with the API key
     # prepopulated
-    def delete(path)
-      self.class.delete(path, query: @default_query, headers: @headers)
+    def delete(path, query: {})
+      query = @default_query.merge(query)
+      self.class.delete(path, query: query, headers: @headers)
     end
 
     private

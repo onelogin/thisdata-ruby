@@ -5,7 +5,7 @@ class ThisDataTest < ThisData::UnitTest
   test "track will use track_async when config option is true" do
     event = stub()
     thread = stub()
-    ThisData.expects(:track_async).with(event).returns(thread)
+    ThisData.expects(:track_async).with(event, {}).returns(thread)
 
     ThisData.configuration.async = true
     assert_equal thread, ThisData.track(event)
@@ -14,7 +14,7 @@ class ThisDataTest < ThisData::UnitTest
   test "track will use track_with_response when config option is false" do
     event = stub()
     http_response = stub()
-    ThisData.expects(:track_with_response).with(event).returns(http_response)
+    ThisData.expects(:track_with_response).with(event, {}).returns(http_response)
 
     ThisData.configuration.async = false
     assert_equal http_response, ThisData.track(event)
@@ -25,7 +25,7 @@ class ThisDataTest < ThisData::UnitTest
     ThisData::Client.expects(:new).returns(client)
     event = stub()
     response = stub("success?" => true, response: stub())
-    client.expects(:track).with(event).returns(response)
+    client.expects(:track).with(event, {}).returns(response)
     ThisData.send(:track_with_response, event)
   end
 
@@ -78,7 +78,7 @@ class ThisDataTest < ThisData::UnitTest
     ThisData::Client.expects(:new).returns(client)
     response = stub("success?" => true, parsed_response: {})
     params = {foo: "bar"}
-    client.expects(:post).with('/verify', {body: params.to_json}).returns(response)
+    client.expects(:post).with('/verify', {body: params.to_json, query:{}}).returns(response)
     assert ThisData.send(:verify, params)
   end
 
