@@ -10,8 +10,8 @@ module ThisData
     #   http://help.thisdata.com/docs/v1rules
     #
     # Returns: Array of OpenStruct Rule objects
-    def self.find(id)
-      response = ThisData::Client.new.get("#{ThisData::RULES_ENDPOINT}/#{id}")
+    def self.find(id, options={})
+      response = ThisData::Client.new.get("#{ThisData::RULES_ENDPOINT}/#{id}", query: options)
       OpenStruct.new( response.parsed_response)
     end
 
@@ -20,8 +20,8 @@ module ThisData
     #   http://help.thisdata.com/docs/v1rules
     #
     # Returns: Array of OpenStruct Rule objects
-    def self.all
-      response = ThisData::Client.new.get(ThisData::RULES_ENDPOINT)
+    def self.all(options={})
+      response = ThisData::Client.new.get(ThisData::RULES_ENDPOINT, query: options)
       response.parsed_response.collect do |rule_hash|
         OpenStruct.new(rule_hash)
       end
@@ -32,8 +32,8 @@ module ThisData
     #   http://help.thisdata.com/docs/v1rules-1
     #
     # Returns: OpenStruct Rule object
-    def self.create(rule)
-      response = ThisData::Client.new.post(ThisData::RULES_ENDPOINT, body: JSON.generate(rule))
+    def self.create(rule, options={})
+      response = ThisData::Client.new.post(ThisData::RULES_ENDPOINT, body: JSON.generate(rule), query: options)
       OpenStruct.new(response.parsed_response)
     end
 
@@ -42,9 +42,9 @@ module ThisData
     #   http://help.thisdata.com/docs/v1rulesid-1
     #
     # Returns: OpenStruct Rule object
-    def self.update(rule)
+    def self.update(rule, options={})
       rule_id = OpenStruct.new(rule).id
-      response = ThisData::Client.new.post("#{ThisData::RULES_ENDPOINT}/#{rule_id}", body: JSON.generate(rule))
+      response = ThisData::Client.new.post("#{ThisData::RULES_ENDPOINT}/#{rule_id}", body: JSON.generate(rule), query: options)
       OpenStruct.new(response.parsed_response)
     end
 
@@ -53,8 +53,8 @@ module ThisData
     #   http://help.thisdata.com/docs/v1rulesid-2
     #
     # Returns: OpenStruct Rule object
-    def self.destroy(id)
-      response = ThisData::Client.new.delete("#{ThisData::RULES_ENDPOINT}/#{id}")
+    def self.destroy(id, options={})
+      response = ThisData::Client.new.delete("#{ThisData::RULES_ENDPOINT}/#{id}", query: options)
       response.code.eql?(204)
     end
 
