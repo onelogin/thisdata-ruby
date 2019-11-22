@@ -8,9 +8,8 @@ module ThisData
 
     include HTTParty
 
-    base_uri "https://api.thisdata.com/v1/"
-
     def initialize
+      self.class.base_uri ThisData.configuration.base_uri
       @api_key = require_api_key
       @headers = {
         "User-Agent" => USER_AGENT
@@ -30,7 +29,7 @@ module ThisData
     # - event       (Required: Hash) a Hash containing details about the event.
     #               See http://help.thisdata.com/v1.0/docs/apiv1events for a
     #               full & current list of available options.
-    def track(event, options={})
+    def track(event, options = {})
       post(ThisData::EVENTS_ENDPOINT, query: options, body: JSON.generate(event))
     end
 
@@ -64,6 +63,5 @@ module ThisData
       def print_api_key_warning
         $stderr.puts(NO_API_KEY_MESSAGE)
       end
-
   end
 end
