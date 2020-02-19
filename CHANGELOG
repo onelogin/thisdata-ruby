@@ -1,3 +1,7 @@
+# 0.2.6
+
+  - base_uri can now be customized on client setup
+
 # 0.2.0
 
   - Add support for two new API endpoints, POST /verify and GET /events

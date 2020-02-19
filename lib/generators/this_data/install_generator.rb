@@ -2,7 +2,7 @@ require 'this_data'
 module ThisData
   class InstallGenerator < Rails::Generators::Base
 
-    argument :api_key
+    argument :api_key, :base_uri
 
     desc "This generator creates a configuration file for the ThisData ruby client inside config/initializers"
     def create_configuration_file
@@ -15,6 +15,9 @@ ThisData.setup do |config|
   # committed to source control, but instead load it from a secret store.
   # Default: nil
   config.api_key = "#{api_key}"
+
+  # Base URI for the API
+  config.base_uri = "#{base_uri}"
 
   # Define a Logger instance if you want to debug or track errors
   # This tells ThisData to log in the development environment.

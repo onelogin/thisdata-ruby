@@ -29,6 +29,9 @@ module ThisData
     # Log the events sent
     config_option :logger
 
+    # API Base URI
+    config_option :base_uri
+
     # ThisData's JS library (optional) adds a cookie.
     # If you're using the library, set this to true, so that we know to expect
     # a cookie value
@@ -60,7 +63,8 @@ module ThisData
         user_name_method:   :name,
         user_email_method:  :email,
         user_mobile_method: :mobile,
-        expect_js_cookie:   false
+        expect_js_cookie:   false,
+        base_uri: 'https://api.thisdata.com/v1/'
       })
     end
 

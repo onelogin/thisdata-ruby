@@ -41,6 +41,7 @@ ThisData.setup do |config|
   config.api_key = 'API_KEY_HERE' # Don't commit your key to source control!
   config.logger  = Logger.new($stdout)
   config.async   = false
+  config.base_uri = 'https://api.thisdata.com/v1/' # optional. This is the default
 end
 ```
 
@@ -102,8 +103,8 @@ events.first.user.id
 
 #### Managing custom Rules
 You can get, create, update and delete custom rules. Note that no error handling is done
-within the API wrapper so you will need to watch out for error `messages` in the 
-response body of each call. 
+within the API wrapper so you will need to watch out for error `messages` in the
+response body of each call.
 
 Create a rule
 ```ruby
@@ -117,7 +118,7 @@ rule = ThisData::Rule.create({
   filters: ["0.0.0.0/0"]
 })
 
-puts rule.id 
+puts rule.id
 puts rule.name
 ...
 ```
