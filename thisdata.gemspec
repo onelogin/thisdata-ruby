@@ -27,14 +27,15 @@ Gem::Specification.new do |spec|
   spec.executables   = []
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "httparty", "~> 0.13"
-  spec.add_runtime_dependency "json", "~> 2.3"
+  spec.required_ruby_version = '>= 2.4'
 
-  spec.add_development_dependency "bundler", "~> 1.10"
+  spec.add_runtime_dependency "httparty"
+  spec.add_runtime_dependency "json"
+
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.8"
   spec.add_development_dependency "fakeweb", "~> 1.3"
   spec.add_development_dependency "mocha", "~> 1.1"
-
 
 end

@@ -16,7 +16,7 @@ class NestedStruct < OpenStruct
                               value
                             end
 
-      new_ostruct_member(key)
+      new_ostruct_member!(key)
     end
   end
 
