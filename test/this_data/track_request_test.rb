@@ -175,12 +175,12 @@ class ThisData::TrackRequestTest < ThisData::UnitTest
 
   test "thisdata_verify will return nil if error" do
     @controller.current_user = nil
-    assert_equal nil, @controller.thisdata_verify
+    assert_nil @controller.thisdata_verify
   end
 
   test "thisdata_verify will return nil if there is no user" do
     ThisData.stubs(:verify).raises(ArgumentError)
-    assert_equal nil, @controller.thisdata_verify
+    assert_nil @controller.thisdata_verify
   end
 
   test "thisdata_verify creates and posts an event containing user and request details" do
