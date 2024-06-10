@@ -1,0 +1,28 @@
+# This workflow should be deleted once we are done publishing "historical" gems.
+name: Publish Gem (historical)
+
+on: [workflow_dispatch]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Publish
+        run: |
+          # dump the gemspec just for debugging
+          echo "Gemspec:"
+          cat *.gemspec
+
+          # publish the gem
+          echo "Publishing gem..."
+          mkdir -p $HOME/.gem
+          touch $HOME/.gem/credentials
+          chmod 0600 $HOME/.gem/credentials
+          printf -- "---\n:github: Bearer ${{secrets.GITHUB_TOKEN}}\n" > $HOME/.gem/credentials
+          gem build *.gemspec
+          gem push --KEY github --host https://rubygems.pkg.github.com/onelogin *.gem
+          echo "Done!"
