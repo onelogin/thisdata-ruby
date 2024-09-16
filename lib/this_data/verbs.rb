@@ -12,6 +12,7 @@ module ThisData
     LOG_OUT               = 'log-out'
     LOG_IN_DENIED         = 'log-in-denied'
     LOG_IN_CHALLENGE      = 'log-in-challenge'
+    LOG_INTO_APP          = 'log-into-app'
     DESKTOP_LOGIN_SUCCESS = 'desktop-login-success'
 
     ACCESS                = 'access'
