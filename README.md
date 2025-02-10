@@ -2,10 +2,6 @@
 
 This gem allows you to use the ThisData Login Intelligence API.
 
-> This repo needs to be cleaned up and modernized.  Please see
-> [Working with private Ruby gems](https://qsft.atlassian.net/wiki/spaces/OneLogin/pages/2190678484/Working+with+private+Ruby+gems)
-> before doing anything else.
-
 ## Installation
 
 Add this line to your application's Gemfile:
